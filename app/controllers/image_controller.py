@@ -22,8 +22,8 @@ def get_image_url(camera_id):
     img_byte_array = BytesIO()
     
     image.save(img_byte_array, format="JPEG")
-    plt.savefig(img_byte_array, format='png')
-    plt.clf()
+    # plt.savefig(img_byte_array, format='png')
+    # plt.clf()
     
     img_byte_array.seek(0)
     img_bye_array_png = base64.b64encode(img_byte_array.getvalue())
