@@ -38,3 +38,15 @@ class Model:
                 return prediction[0]
         except Exception as e:
             return str(e)
+        
+    def predict_from_bytes(self, image_bytes):
+        try:
+            image = image_bytes
+            image = self.transform(image)
+            image = image.unsqueeze(0)
+            with torch.no_grad():
+                output = self.model(image)
+                prediction = output[0].numpy()
+                return prediction[0]
+        except Exception as e:
+            return str(e)

@@ -4,8 +4,12 @@ from PIL import Image
 from io import BytesIO
 from app.constants.crawler import CRAWLER_AUTH_ENDPOINT_GT, CRAWLER_AUTH_HEADER_GT, CRAWLER_IMAGE_ENDPOINT_GT, CRAWLER_IMAGE_HEADER_GT
 import matplotlib.pyplot as plt
+from app.model.condition_model import Model as ConditionModel
+from app.model.density_model import Model as DensityModel
+from app.model.velocity_model import Model as VelocityModel
+    
 
-def get_image_url(camera_id):
+def get_image_and_predictions(camera_id):
     response = requests.get(url=CRAWLER_AUTH_ENDPOINT_GT, headers=CRAWLER_AUTH_HEADER_GT)
     cookies = response.cookies
 
@@ -23,6 +27,18 @@ def get_image_url(camera_id):
 
         img_byte_array = BytesIO()
         
+        # add prediction here
+        image_for_models = image.copy()
+
+        velocity_model = VelocityModel()
+        velocity = velocity_model.predict_from_bytes(image_for_models)
+
+        condition_model = ConditionModel()
+        condition = condition_model.predict_from_bytes(image_for_models)
+
+        density_model = DensityModel()
+        density = density_model.predict_from_bytes(image_for_models)
+
         image.save(img_byte_array, format="JPEG")
         
         img_byte_array.seek(0)
@@ -30,6 +46,14 @@ def get_image_url(camera_id):
         
         data_url = "data:image/jpeg;base64," + img_byte_array_png.decode('utf-8')
         # print(data_url)
-        return data_url
+        return {
+            "image": data_url,
+            "velocity": str(velocity),
+            "condition": str(condition),
+            "density": str(density)
+        }
     else:
         return "IMAGE NOT AVAILABLE"
+
+def predict_velocity_condition_density(camera):
+    pass

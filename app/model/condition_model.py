@@ -35,3 +35,20 @@ class Model:
             
         except Exception as e:
             return str(e)
+        
+    def predict_from_bytes(self, image_bytes):
+        try:
+            image = image_bytes
+            image = self.transform(image)
+            image = image.unsqueeze(0)
+            labels = ['A', 'B', 'C', 'D', 'E', 'F']
+
+            with torch.no_grad():
+                outputs = self.model(image)
+
+                _, predicted = torch.max(outputs, 1)
+
+                return labels[predicted.item()]
+        
+        except Exception as e:
+            return str(e)
