@@ -1,0 +1,16 @@
+{
+    "apps": [
+      {
+        "name": "bktraffic-trafficview",
+        "script": "venv/bin/gunicorn",
+        "args": ["wsgi:app"],
+        "interpreter": "python3.10",
+        "watch": false,
+        "env": {
+          "FLASK_ENV": "production",
+          "FLASK_APP": "wsgi.py"
+        }
+      }
+    ]
+  }
+  
