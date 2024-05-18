@@ -4,12 +4,14 @@ from PIL import Image
 from io import BytesIO
 from app.constants.crawler import CRAWLER_AUTH_ENDPOINT_GT, CRAWLER_AUTH_HEADER_GT, CRAWLER_IMAGE_ENDPOINT_GT, CRAWLER_IMAGE_HEADER_GT
 import matplotlib.pyplot as plt
+from flask import Response
 
 def get_image_url(camera_id):
     response = requests.get(url=CRAWLER_AUTH_ENDPOINT_GT, headers=CRAWLER_AUTH_HEADER_GT)
     cookies = response.cookies
 
-    image_endpoint = CRAWLER_IMAGE_ENDPOINT_GT + camera_id
+    image_endpoint = CRAWLER_IMAGE_ENDPOINT_GT + camera_id +'?h=244&w=326'
+    print(image_endpoint)
     image_response = requests.get(
         url=image_endpoint,
         headers=CRAWLER_IMAGE_HEADER_GT,
@@ -31,5 +33,7 @@ def get_image_url(camera_id):
         data_url = "data:image/jpeg;base64," + img_byte_array_png.decode('utf-8')
         # print(data_url)
         return data_url
+        # image_bytes = BytesIO(image_response.content)
+        # return Response(image_bytes, mimetype='image/jpeg')
     else:
         return "IMAGE NOT AVAILABLE"
